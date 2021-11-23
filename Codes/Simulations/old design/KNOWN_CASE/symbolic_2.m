@@ -17,8 +17,10 @@ F_yr = C_y*L_b*phi/v;
 
 x_dot = v * sin(theta);
 y_dot = v * cos(theta);
+% v_dot = cos(delta)*a - 2/m * F_yf * sin(delta);
 v_dot = alpha;
 theta_dot = phi;
+% phi_dot = L_a/J * (m*a*sin(delta) + 2*F_yf*cos(delta)) - 2*L_b*F_yr;
 phi_dot = L_a/J * (beta) - 2*L_b*F_yr;
 
 %% Error Dynamics
@@ -32,13 +34,13 @@ e2_dot = phi*e1 - v_ref*sin(e3);
 e3_dot = omega_ref - phi;
 
 vc1 = v_ref*cos(e3) + k1*e1;
-vc2 = omega_ref - k2*v_ref*e2 + k3*v_ref*sin(e3);
+vc2 = omega_ref + k2*v_ref*e2 + k3*v_ref*sin(e3);
 
 vc1_dot = v_ref_dot*cos(e3) + k1*e1_dot - v_ref*sin(e3)*e3_dot;
-vc2_dot = omega_ref_dot - k2*v_ref_dot*e2 + k3*v_ref_dot*sin(e3) - k2*v_ref*e2_dot + k3*v_ref*cos(e3)*e3_dot;
+vc2_dot = omega_ref_dot + k2*v_ref_dot*e2 + k3*v_ref_dot*sin(e3) + k2*v_ref*e2_dot + k3*v_ref*cos(e3)*e3_dot;
 
 alpha = vc1_dot + k4*(vc1 - v);
-beta = J/L_a * (vc2_dot + k4*(vc2 - phi) + 2*L_b*F_yr);
+beta = vc2_dot + k4*(vc2 - phi);
 
 e4 = v - vc1;
 e5 = phi - vc2;
